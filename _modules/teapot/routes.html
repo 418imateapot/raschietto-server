@@ -57,6 +57,14 @@
     <span class="k">return</span> <span class="n">get_doc</span><span class="p">(</span><span class="n">doc_url</span><span class="p">)</span></div>
 
 
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/annotations&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">get_annotations</span><span class="p">():</span>
+    <span class="n">doc_url</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;url&#39;</span><span class="p">)</span>
+    <span class="c"># CHIAMA LO SCRAPER</span>
+    <span class="c"># RESTITUISCI RISULTATO</span>
+    <span class="k">return</span> <span class="s">&quot;&lt;h1&gt;Nulla da vedere&lt;/h1&gt;&quot;</span>
+
+
 <span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;path&#39;</span><span class="p">:</span> <span class="s">&#39;&#39;</span><span class="p">})</span>
 <span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/&lt;path:path&gt;&#39;</span><span class="p">)</span>
 <div class="viewcode-block" id="catch_all"><a class="viewcode-back" href="../../teapot.html#teapot.routes.catch_all">[documenti]</a><span class="k">def</span> <span class="nf">catch_all</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>

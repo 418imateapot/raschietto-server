@@ -122,9 +122,11 @@
 
     <span class="n">my_page</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
 
+    <span class="c"># Rimuovi il banner dei cookie del *****</span>
     <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">my_page</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s">&#39;//*[@id=&quot;cookiesAlert&quot;]&#39;</span><span class="p">):</span>
         <span class="n">el</span><span class="o">.</span><span class="n">getparent</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">el</span><span class="p">)</span>
 
+    <span class="c"># Rimuovi tutti i tag script e il loro contenuto</span>
     <span class="n">cleaner</span> <span class="o">=</span> <span class="n">Cleaner</span><span class="p">()</span>
     <span class="n">cleaner</span><span class="o">.</span><span class="n">javascript</span> <span class="o">=</span> <span class="bp">True</span>
     <span class="n">my_page</span> <span class="o">=</span> <span class="n">cleaner</span><span class="o">.</span><span class="n">clean_html</span><span class="p">(</span><span class="n">my_page</span><span class="p">)</span>
