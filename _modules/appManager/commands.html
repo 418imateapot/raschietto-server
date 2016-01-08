@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>appManager.commands &mdash; Raschietto  documentazione</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <link rel="top" title="Raschietto  documentazione" href="../../index.html" />
+    <link rel="up" title="Codice del modulo" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Codice sorgente per appManager.commands</h1><div class="highlight"><pre>
+<span class="c">#!/usr/bin/env python2</span>
+<span class="c"># coding: utf-8</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">CURRENT_DIR</span><span class="p">,</span> <span class="n">REPO_DIR</span><span class="p">,</span> <span class="n">REQ_FILE</span>
+
+
+<div class="viewcode-block" id="run_command"><a class="viewcode-back" href="../../appManager.html#appManager.commands.run_command">[documenti]</a><span class="k">def</span> <span class="nf">run_command</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">directory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Takes a string representing a command and executes it</span>
+<span class="sd">    in a subprocess, piping output to an iterator</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span>
+                         <span class="n">cwd</span><span class="o">=</span><span class="n">directory</span><span class="p">,</span>
+                         <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span>
+                         <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">readline</span><span class="p">,</span> <span class="n">b</span><span class="s">&#39;&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="which"><a class="viewcode-back" href="../../appManager.html#appManager.commands.which">[documenti]</a><span class="k">def</span> <span class="nf">which</span><span class="p">(</span><span class="n">program</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Finds the path of the executable for a given command &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">is_exe</span><span class="p">(</span><span class="n">fpath</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fpath</span><span class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">access</span><span class="p">(</span><span class="n">fpath</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">X_OK</span><span class="p">)</span>
+
+    <span class="n">fpath</span><span class="p">,</span> <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">program</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">fpath</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">is_exe</span><span class="p">(</span><span class="n">program</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">program</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&quot;PATH&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">):</span>  <span class="c"># noqa</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s">&#39;&quot;&#39;</span><span class="p">)</span>
+            <span class="n">exe_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">program</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">is_exe</span><span class="p">(</span><span class="n">exe_file</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">exe_file</span>
+    <span class="k">return</span> <span class="bp">None</span></div>
+
+
+<div class="viewcode-block" id="checkDir"><a class="viewcode-back" href="../../appManager.html#appManager.commands.checkDir">[documenti]</a><span class="k">def</span> <span class="nf">checkDir</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Checks that we are in the correct directory &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">CURRENT_DIR</span> <span class="o">!=</span> <span class="n">REPO_DIR</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">REPO_DIR</span><span class="p">)</span>
+        <span class="k">print</span> <span class="s">&quot;cd into {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">REPO_DIR</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="setupPyDeps"><a class="viewcode-back" href="../../appManager.html#appManager.commands.setupPyDeps">[documenti]</a><span class="k">def</span> <span class="nf">setupPyDeps</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Install python dependencies listed in requirements.txt</span>
+<span class="sd">    along with a virtualenv, if necessary</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># Setup a virtualenv if there isn&#39;t any</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="s">&#39;env&#39;</span><span class="p">):</span>
+        <span class="n">virtualenv_executable</span> <span class="o">=</span> <span class="n">which</span><span class="p">(</span><span class="s">&#39;virtualenv&#39;</span><span class="p">)</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="n">virtualenv_executable</span><span class="p">,</span> <span class="s">&#39;env&#39;</span><span class="p">]</span>
+        <span class="k">yield</span> <span class="s">&quot;==================================</span><span class="se">\n</span><span class="s">&quot;</span>
+        <span class="k">yield</span> <span class="s">&quot;Setting up the virtual environment</span><span class="se">\n</span><span class="s">&quot;</span>
+        <span class="k">yield</span> <span class="s">&quot;==================================</span><span class="se">\n</span><span class="s">&quot;</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">run_command</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="s">&#39;.&#39;</span><span class="p">):</span>
+            <span class="k">yield</span> <span class="n">line</span>
+
+    <span class="c"># Install deps</span>
+    <span class="n">pip_executable</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">REPO_DIR</span><span class="p">,</span> <span class="s">&#39;env&#39;</span><span class="p">,</span> <span class="s">&#39;bin/pip&#39;</span><span class="p">)</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">pip_executable</span><span class="p">,</span>
+        <span class="s">&#39;install&#39;</span><span class="p">,</span>
+        <span class="s">&#39;-r&#39;</span><span class="p">,</span>
+        <span class="n">REQ_FILE</span>
+        <span class="p">]</span>
+    <span class="k">yield</span> <span class="s">&quot;====================================</span><span class="se">\n</span><span class="s">&quot;</span>
+    <span class="k">yield</span> <span class="s">&quot;Installing required python libraries</span><span class="se">\n</span><span class="s">&quot;</span>
+    <span class="k">yield</span> <span class="s">&quot;====================================</span><span class="se">\n</span><span class="s">&quot;</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">run_command</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="s">&#39;.&#39;</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">line</span>
+    <span class="k">yield</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">All done!</span><span class="se">\n</span><span class="s">======</span><span class="se">\n</span><span class="s">&quot;</span></div>
+
+
+<div class="viewcode-block" id="setupNodeDeps"><a class="viewcode-back" href="../../appManager.html#appManager.commands.setupNodeDeps">[documenti]</a><span class="k">def</span> <span class="nf">setupNodeDeps</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Runs npm install in the static directory &quot;&quot;&quot;</span>
+    <span class="n">npm_path</span> <span class="o">=</span> <span class="n">which</span><span class="p">(</span><span class="s">&#39;npm&#39;</span><span class="p">)</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="n">npm_path</span><span class="p">,</span> <span class="s">&#39;install&#39;</span><span class="p">,</span> <span class="s">&#39;--parseable&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">run_command</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="s">&#39;static&#39;</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">line</span></div>
+
+
+<div class="viewcode-block" id="buildStaticFiles"><a class="viewcode-back" href="../../appManager.html#appManager.commands.buildStaticFiles">[documenti]</a><span class="k">def</span> <span class="nf">buildStaticFiles</span><span class="p">(</span><span class="n">watch</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">watch</span><span class="p">:</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;gulp&#39;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;gulp&#39;</span><span class="p">,</span> <span class="s">&#39;build&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">run_command</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="s">&#39;static&#39;</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">line</span></div>
+
+
+<div class="viewcode-block" id="setupApacheStuff"><a class="viewcode-back" href="../../appManager.html#appManager.commands.setupApacheStuff">[documenti]</a><span class="k">def</span> <span class="nf">setupApacheStuff</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compiles the configuration file template for apache</span>
+<span class="sd">    and creates the logs directory</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s">&#39;apache_files/&#39;</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="s">&quot;========================================</span><span class="se">\n</span><span class="s">&quot;</span>
+    <span class="k">yield</span> <span class="s">&quot;Creating apache config and log directory</span><span class="se">\n</span><span class="s">&quot;</span>
+    <span class="k">yield</span> <span class="s">&quot;========================================</span><span class="se">\n</span><span class="s">&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;templates/site-template.conf&#39;</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">conf_file</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;_ROOT_DIR_&#39;</span><span class="p">,</span> <span class="n">REPO_DIR</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">&#39;010-raschietto.conf&#39;</span><span class="p">,</span> <span class="s">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">conf_file</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">REPO_DIR</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">REPO_DIR</span><span class="p">,</span> <span class="s">&#39;logs&#39;</span><span class="p">),</span> <span class="mo">0755</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">errno</span>
+        <span class="k">if</span> <span class="n">err</span><span class="o">.</span><span class="n">errno</span> <span class="o">!=</span> <span class="n">errno</span><span class="o">.</span><span class="n">EEXIST</span><span class="p">:</span>
+            <span class="k">raise</span>
+    <span class="k">yield</span> <span class="s">&quot;&quot;&quot;Fatto!</span><span class="se">\n</span><span class="s">----</span>
+<span class="s">Ora puoi eseguire come amministratore</span>
+
+<span class="s">  apache_files/install.sh</span>
+
+<span class="s">per installare il sito su macchina locale,</span>
+<span class="s">oppure copiare a mano le cartelle e il file</span>
+<span class="s">&quot;apache_files/renameme.htaccess&quot; sul server</span>
+<span class="s">remoto per mettere su tutta la baracca</span>
+<span class="s">&quot;&quot;&quot;</span></div>
+
+
+<div class="viewcode-block" id="lastMessage"><a class="viewcode-back" href="../../appManager.html#appManager.commands.lastMessage">[documenti]</a><span class="k">def</span> <span class="nf">lastMessage</span><span class="p">():</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;&quot;</span>
+<span class="s">Setup completato!</span>
+<span class="s">=================</span>
+<span class="s">Ora puoi eseguire come amministratore</span>
+
+<span class="s">  apache_files/install.sh</span>
+
+<span class="s">per installare il sito su macchina locale,</span>
+<span class="s">oppure copiare a mano le cartelle e il file</span>
+<span class="s">&quot;apache_files/renameme.htaccess&quot; sul server</span>
+<span class="s">remoto per mettere su tutta la baracca</span>
+<span class="s">&quot;&quot;&quot;</span></div>
+
+
+<span class="c">##################################################</span>
+<div class="viewcode-block" id="setup"><a class="viewcode-back" href="../../appManager.html#appManager.commands.setup">[documenti]</a><span class="k">def</span> <span class="nf">setup</span><span class="p">():</span>
+    <span class="n">checkDir</span><span class="p">()</span>
+    <span class="n">makeVirtualenv</span><span class="p">(</span><span class="s">&#39;env&#39;</span><span class="p">)</span>
+    <span class="n">installPyLibs</span><span class="p">(</span><span class="n">REQ_FILE</span><span class="p">)</span>
+    <span class="n">setupNodeDeps</span><span class="p">()</span>
+    <span class="n">buildStaticFiles</span><span class="p">()</span>
+    <span class="n">setupApacheStuff</span><span class="p">()</span>
+    <span class="n">lastMessage</span><span class="p">()</span></div>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">setup</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Codice del modulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Vai" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Inserisci un termine di ricerca un modulo, classe o nome di funzione
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 418imateapot Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

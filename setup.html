@@ -1,0 +1,177 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>setup module &mdash; Raschietto  documentazione</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Raschietto  documentazione" href="index.html" />
+    <link rel="next" title="teapot package" href="teapot.html" />
+    <link rel="prev" title="manage module" href="manage.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-setup">
+<span id="setup-module"></span><h1>setup module<a class="headerlink" href="#module-setup" title="Link a questa intestazione">¶</a></h1>
+<dl class="function">
+<dt id="setup.buildStaticFiles">
+<code class="descclassname">setup.</code><code class="descname">buildStaticFiles</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#buildStaticFiles"><span class="viewcode-link">[sorgente]</span></a><a class="headerlink" href="#setup.buildStaticFiles" title="Link a questa definizione">¶</a></dt>
+<dd><p>Esegue <em>gulp build</em> per compilare i file statici</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="setup.installPyLibs">
+<code class="descclassname">setup.</code><code class="descname">installPyLibs</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#installPyLibs"><span class="viewcode-link">[sorgente]</span></a><a class="headerlink" href="#setup.installPyLibs" title="Link a questa definizione">¶</a></dt>
+<dd><p>Installa le dependencies necessarie nel virtualenv</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="setup.lastMessage">
+<code class="descclassname">setup.</code><code class="descname">lastMessage</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#lastMessage"><span class="viewcode-link">[sorgente]</span></a><a class="headerlink" href="#setup.lastMessage" title="Link a questa definizione">¶</a></dt>
+<dd><p>Stampa un messaggio conclusivo</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="setup.makeIcon">
+<code class="descclassname">setup.</code><code class="descname">makeIcon</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#makeIcon"><span class="viewcode-link">[sorgente]</span></a><a class="headerlink" href="#setup.makeIcon" title="Link a questa definizione">¶</a></dt>
+<dd><p>Crea il file <em>.desktop</em> per RaschiettoManager</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="setup.makeVirtualenv">
+<code class="descclassname">setup.</code><code class="descname">makeVirtualenv</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#makeVirtualenv"><span class="viewcode-link">[sorgente]</span></a><a class="headerlink" href="#setup.makeVirtualenv" title="Link a questa definizione">¶</a></dt>
+<dd><p>Crea il virtualenv python in cui installare
+le dipendenze di Raschietto</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; Opzionale. Il nome del nuovo ambiente virtuale</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="setup.setup">
+<code class="descclassname">setup.</code><code class="descname">setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#setup"><span class="viewcode-link">[sorgente]</span></a><a class="headerlink" href="#setup.setup" title="Link a questa definizione">¶</a></dt>
+<dd><p>Esegue tutti i task necessari per installare
+localmente Rachietto</p>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">This is the function you&#8217;re looking for!</p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="setup.setupApacheStuff">
+<code class="descclassname">setup.</code><code class="descname">setupApacheStuff</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#setupApacheStuff"><span class="viewcode-link">[sorgente]</span></a><a class="headerlink" href="#setup.setupApacheStuff" title="Link a questa definizione">¶</a></dt>
+<dd><p>Compila i file di configurazione per Apache a partire
+dai template e crea la directory per i <em>log</em></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="setup.setupNodeDeps">
+<code class="descclassname">setup.</code><code class="descname">setupNodeDeps</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#setupNodeDeps"><span class="viewcode-link">[sorgente]</span></a><a class="headerlink" href="#setup.setupNodeDeps" title="Link a questa definizione">¶</a></dt>
+<dd><p>Esegue <em>npm install</em> per installare le librerie JavaScript</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="setup.which">
+<code class="descclassname">setup.</code><code class="descname">which</code><span class="sig-paren">(</span><em>program</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/setup.html#which"><span class="viewcode-link">[sorgente]</span></a><a class="headerlink" href="#setup.which" title="Link a questa definizione">¶</a></dt>
+<dd><p>Trova il path assoluto per il file eseguibile di un comando</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>program</strong> (<em>str</em>) &#8211; Il nome con cui viene invocato il programma</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="manage.html" title="capitolo precedente">manage module</a></li>
+      <li>Next: <a href="teapot.html" title="capitolo successivo">teapot package</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Questa pagina</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/setup.txt"
+            rel="nofollow">Mostra sorgente</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Vai" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Inserisci un termine di ricerca un modulo, classe o nome di funzione
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 418imateapot Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="_sources/setup.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

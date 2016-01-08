@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>teapot.boris.docloader &mdash; Raschietto  documentazione</title>
+    
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/translations.js"></script>
+    <link rel="top" title="Raschietto  documentazione" href="../../../index.html" />
+    <link rel="up" title="Codice del modulo" href="../../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Codice sorgente per teapot.boris.docloader</h1><div class="highlight"><pre>
+<span class="c"># coding: utf-8</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Funzioni per aggiungere titolo, doi e url di un documento al triple store</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">rdflib</span>
+
+<span class="kn">from</span> <span class="nn">urlparse</span> <span class="kn">import</span> <span class="n">urlparse</span>
+<span class="kn">from</span> <span class="nn">rdflib.namespace</span> <span class="kn">import</span> <span class="n">RDF</span>
+<span class="kn">from</span> <span class="nn">rdflib</span> <span class="kn">import</span> <span class="n">Namespace</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">URIRef</span>
+<span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">html</span>
+<span class="kn">from</span> <span class="nn">SPARQLWrapper</span> <span class="kn">import</span> <span class="n">SPARQLWrapper</span>
+
+
+<div class="viewcode-block" id="upload_graph"><a class="viewcode-back" href="../../../teapot.boris.html#teapot.boris.docloader.upload_graph">[documenti]</a><span class="k">def</span> <span class="nf">upload_graph</span><span class="p">(</span><span class="n">serialized_graph</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Upload stuff</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tps_graph</span> <span class="o">=</span> <span class="s">&quot;http://vitali.web.cs.unibo.it/raschietto/graph/ltw1543&quot;</span>
+
+    <span class="n">query</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;INSERT DATA {</span>
+<span class="s">        GRAPH &lt;</span><span class="si">%s</span><span class="s">&gt; { </span><span class="si">%s</span><span class="s"> }</span>
+<span class="s">    }&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tps_graph</span><span class="p">,</span> <span class="n">serialized_graph</span><span class="p">)</span>
+
+    <span class="c"># NB: Usare &#39;DELETE&#39; al posto di &#39;INSERT&#39; per rimuovere</span>
+    <span class="c"># i dati dal triplestore</span>
+
+    <span class="n">sparql</span> <span class="o">=</span> <span class="n">SPARQLWrapper</span><span class="p">(</span>
+        <span class="s">&quot;http://tweb2015.cs.unibo.it:8080/data/update?user{}&amp;pass={}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="s">&quot;ltw1543&quot;</span><span class="p">,</span> <span class="s">&quot;43het5=!X&quot;</span><span class="p">))</span>
+    <span class="n">sparql</span><span class="o">.</span><span class="n">setQuery</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="n">sparql</span><span class="o">.</span><span class="n">setMethod</span><span class="p">(</span><span class="s">&#39;POST&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sparql</span><span class="o">.</span><span class="n">query</span><span class="p">()</span></div>
+
+<span class="c"># dato un URL di un&#39;issue di dlib o statistica crea un json con titoli e</span>
+<span class="c"># URL degli articoli di quel numero</span>
+
+
+<span class="k">def</span> <span class="nf">_getURLandTitle</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Recupera i metadati di un documento dal web</span>
+
+<span class="sd">    :param string: url L&#39;url del docmento da analizzare</span>
+<span class="sd">    :returns:  Un dizionario contenente url, titolo e doi del documento</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">page</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">tree</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s">&quot;dlib&quot;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span>
+            <span class="s">&#39;/html/body/form/table[3]/tr/td/table[5]/tr/td/table[1]/tr/td[2]/h3[2]/text()&#39;</span><span class="p">)</span>  <span class="c"># noqa</span>
+        <span class="n">doi</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s">&#39;/html/head/meta[@name=&quot;DOI&quot;]/@content&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="s">&quot;rivista-statistica&quot;</span> <span class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s">&#39;//*[@id=&quot;articleTitle&quot;]/h3/text()&#39;</span><span class="p">)</span>
+        <span class="n">doi</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s">&#39;//*[@id=&quot;pub-id::doi&quot;]/text()&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">&#39;&#39;</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s">&#39;title&#39;</span><span class="p">:</span> <span class="n">title</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="s">&#39;doi&#39;</span><span class="p">:</span> <span class="n">doi</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="s">&#39;url&#39;</span><span class="p">:</span> <span class="n">url</span>
+    <span class="p">}</span>
+
+
+<span class="c"># in input prende un dizionario con chiavi: url, doi e title.</span>
+<span class="k">def</span> <span class="nf">_createTriples</span><span class="p">(</span><span class="n">page_data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Costruisce il grafo RDF con le triple rappresentanti il documento</span>
+<span class="sd">    e i metadati che ci interessano.</span>
+
+<span class="sd">    :param dict: page_data</span>
+<span class="sd">                 Un dizionario contenente titolo, doi e url di un documento</span>
+<span class="sd">    :returns: Il grafo rdflib.Graph contenente le triple generate</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">FABIO</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">(</span><span class="s">&quot;http://purl.org/spar/fabio/&quot;</span><span class="p">)</span>
+    <span class="n">FRBR</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">(</span><span class="s">&quot;http://purl.org/vocab/frbr/core#&quot;</span><span class="p">)</span>
+    <span class="n">DCTERMS</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">(</span><span class="s">&quot;http://purl.org/dc/terms/&quot;</span><span class="p">)</span>
+    <span class="n">PRISM</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">(</span><span class="s">&quot;http://prismstandard.org/namespaces/basic/2.0/&quot;</span><span class="p">)</span>
+    <span class="n">XMLS</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">(</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema#&quot;</span><span class="p">)</span>
+
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">rdflib</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+
+    <span class="n">item</span> <span class="o">=</span> <span class="n">URIRef</span><span class="p">(</span><span class="n">page_data</span><span class="p">[</span><span class="s">&#39;url&#39;</span><span class="p">])</span>
+    <span class="n">work</span> <span class="o">=</span> <span class="n">URIRef</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span>
+    <span class="n">expression</span> <span class="o">=</span> <span class="n">URIRef</span><span class="p">(</span><span class="n">work</span> <span class="o">+</span> <span class="s">&quot;_ver1&quot;</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">(</span><span class="n">page_data</span><span class="p">[</span><span class="s">&#39;title&#39;</span><span class="p">],</span> <span class="n">datatype</span><span class="o">=</span><span class="n">XMLS</span><span class="o">.</span><span class="n">string</span><span class="p">)</span>
+    <span class="n">doi</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">(</span><span class="n">page_data</span><span class="p">[</span><span class="s">&#39;doi&#39;</span><span class="p">],</span> <span class="n">datatype</span><span class="o">=</span><span class="n">XMLS</span><span class="o">.</span><span class="n">string</span><span class="p">)</span>
+
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">item</span><span class="p">,</span> <span class="n">RDF</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">FABIO</span><span class="o">.</span><span class="n">Item</span><span class="p">))</span>
+
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">work</span><span class="p">,</span> <span class="n">RDF</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">FABIO</span><span class="o">.</span><span class="n">Work</span><span class="p">))</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">work</span><span class="p">,</span> <span class="n">FRBR</span><span class="o">.</span><span class="n">realization</span><span class="p">,</span> <span class="n">expression</span><span class="p">))</span>
+
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">expression</span><span class="p">,</span> <span class="n">RDF</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">FABIO</span><span class="o">.</span><span class="n">Expression</span><span class="p">))</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">expression</span><span class="p">,</span> <span class="n">FABIO</span><span class="o">.</span><span class="n">hasRepresentation</span><span class="p">,</span> <span class="n">item</span><span class="p">))</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">expression</span><span class="p">,</span> <span class="n">DCTERMS</span><span class="o">.</span><span class="n">title</span><span class="p">,</span> <span class="n">title</span><span class="p">))</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">expression</span><span class="p">,</span> <span class="n">PRISM</span><span class="o">.</span><span class="n">hasDOI</span><span class="p">,</span> <span class="n">doi</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">graph</span>
+
+
+<div class="viewcode-block" id="makeGraph"><a class="viewcode-back" href="../../../teapot.boris.html#teapot.boris.docloader.makeGraph">[documenti]</a><span class="k">def</span> <span class="nf">makeGraph</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Dato l&#39;URL di un documento supportato, restituisce un rdflib.Graph con</span>
+<span class="sd">    le informazioni necessarie per insere il documento nel triple store.</span>
+
+<span class="sd">    :param url: L&#39;URL del documento.</span>
+<span class="sd">    :returns string: Il grafo serializzato in formato nTriples</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">_getURLandTitle</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">_createTriples</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">g</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="n">format</span><span class="o">=</span><span class="s">&quot;nt&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="add_document_to_fuseki"><a class="viewcode-back" href="../../../teapot.boris.html#teapot.boris.docloader.add_document_to_fuseki">[documenti]</a><span class="k">def</span> <span class="nf">add_document_to_fuseki</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Aggiunge a fuseki le informazioni necessarie per gestire il</span>
+<span class="sd">    documento puntato dall&#39;url passato come parametro</span>
+
+<span class="sd">    :param string: url L&#39;URL del documento da aggiungere</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">url_obj</span> <span class="o">=</span> <span class="n">urlparse</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">url_obj</span><span class="o">.</span><span class="n">scheme</span> <span class="o">!=</span> <span class="s">&#39;http&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="n">makeGraph</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">upload_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Codice del modulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Vai" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Inserisci un termine di ricerca un modulo, classe o nome di funzione
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 418imateapot Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

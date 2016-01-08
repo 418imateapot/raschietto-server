@@ -1,0 +1,199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>teapot.boris package &mdash; Raschietto  documentazione</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/translations.js"></script>
+    <link rel="top" title="Raschietto  documentazione" href="index.html" />
+    <link rel="up" title="teapot package" href="teapot.html" />
+    <link rel="prev" title="teapot package" href="teapot.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-teapot.boris">
+<span id="teapot-boris-package"></span><h1>teapot.boris package<a class="headerlink" href="#module-teapot.boris" title="Link a questa intestazione">¶</a></h1>
+<p>Il modulo per lo scraping di Raschietto</p>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link a questa intestazione">¶</a></h2>
+</div>
+<div class="section" id="module-teapot.boris.docloader">
+<span id="teapot-boris-docloader-module"></span><h2>teapot.boris.docloader module<a class="headerlink" href="#module-teapot.boris.docloader" title="Link a questa intestazione">¶</a></h2>
+<p>Funzioni per aggiungere titolo, doi e url di un documento al triple store</p>
+<dl class="function">
+<dt id="teapot.boris.docloader.add_document_to_fuseki">
+<code class="descclassname">teapot.boris.docloader.</code><code class="descname">add_document_to_fuseki</code><span class="sig-paren">(</span><em>url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/teapot/boris/docloader.html#add_document_to_fuseki"><span class="viewcode-link">[sorgente]</span></a><a class="headerlink" href="#teapot.boris.docloader.add_document_to_fuseki" title="Link a questa definizione">¶</a></dt>
+<dd><p>Aggiunge a fuseki le informazioni necessarie per gestire il
+documento puntato dall&#8217;url passato come parametro</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>string</strong> &#8211; url L&#8217;URL del documento da aggiungere</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="teapot.boris.docloader.makeGraph">
+<code class="descclassname">teapot.boris.docloader.</code><code class="descname">makeGraph</code><span class="sig-paren">(</span><em>url</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/teapot/boris/docloader.html#makeGraph"><span class="viewcode-link">[sorgente]</span></a><a class="headerlink" href="#teapot.boris.docloader.makeGraph" title="Link a questa definizione">¶</a></dt>
+<dd><p>Dato l&#8217;URL di un documento supportato, restituisce un rdflib.Graph con
+le informazioni necessarie per insere il documento nel triple store.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>url</strong> &#8211; L&#8217;URL del documento.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns string:</th><td class="field-body">Il grafo serializzato in formato nTriples</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="teapot.boris.docloader.upload_graph">
+<code class="descclassname">teapot.boris.docloader.</code><code class="descname">upload_graph</code><span class="sig-paren">(</span><em>serialized_graph</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/teapot/boris/docloader.html#upload_graph"><span class="viewcode-link">[sorgente]</span></a><a class="headerlink" href="#teapot.boris.docloader.upload_graph" title="Link a questa definizione">¶</a></dt>
+<dd><p>Upload stuff</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-teapot.boris.documents">
+<span id="teapot-boris-documents-module"></span><h2>teapot.boris.documents module<a class="headerlink" href="#module-teapot.boris.documents" title="Link a questa intestazione">¶</a></h2>
+<p>Funzioni utili per recuperare i documenti dai server remoti</p>
+<dl class="function">
+<dt id="teapot.boris.documents.fix_links">
+<code class="descclassname">teapot.boris.documents.</code><code class="descname">fix_links</code><span class="sig-paren">(</span><em>content</em>, <em>absolute_prefix</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/teapot/boris/documents.html#fix_links"><span class="viewcode-link">[sorgente]</span></a><a class="headerlink" href="#teapot.boris.documents.fix_links" title="Link a questa definizione">¶</a></dt>
+<dd><p>Riscrive i link relativi come link assoluti</p>
+<p>Vedi <a class="reference external" href="https://stackoverflow.com/questions/26167690/lxml-how-to-change-img-src-to-absolute-link">questa domanda</a> su StackOverflow</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><ul class="first simple">
+<li><strong>content</strong> (<em>string</em>) &#8211; Una stringa contenente un documento HTML</li>
+<li><strong>absolute_prefix</strong> (<em>string</em>) &#8211; L&#8217;URL base da cui costruire i link assoluti</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body"><p class="first last">Il documento HTML con i link riscritti</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="teapot.boris.documents.get_doc">
+<code class="descclassname">teapot.boris.documents.</code><code class="descname">get_doc</code><span class="sig-paren">(</span><em>url_string</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/teapot/boris/documents.html#get_doc"><span class="viewcode-link">[sorgente]</span></a><a class="headerlink" href="#teapot.boris.documents.get_doc" title="Link a questa definizione">¶</a></dt>
+<dd><p>Recupera l&#8217;HTML di un documento</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parametri:</th><td class="field-body"><strong>url_string</strong> (<em>string</em>) &#8211; L&#8217;URL del documento da scaricare</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Ritorna:</th><td class="field-body">Dizionario contenente il documento richiesto e alcuni metadati</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Tabella dei contenuti</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">teapot.boris package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-teapot.boris.docloader">teapot.boris.docloader module</a></li>
+<li><a class="reference internal" href="#module-teapot.boris.documents">teapot.boris.documents module</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="teapot.html">teapot package</a><ul>
+      <li>Previous: <a href="teapot.html" title="capitolo precedente">teapot package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>Questa pagina</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/teapot.boris.txt"
+            rel="nofollow">Mostra sorgente</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Ricerca veloce</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Vai" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Inserisci un termine di ricerca un modulo, classe o nome di funzione
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, 418imateapot Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="_sources/teapot.boris.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
